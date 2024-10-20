@@ -1,0 +1,196 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["Sphere_Left", "Sphere_Right", "GridMaterial", "Target"]
+    def Material "Target"
+    {
+        token outputs:mtlx:surface.connect = </Root/Target/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor = (1, 1, 1) (
+                colorSpace = "lin_srgb"
+            )
+            color3f inputs:diffuseColor.connect = </Root/Target/IfGreater_1.outputs:out>
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (98.11719, 33.535156)
+            int ui:nodegraph:node:stackingOrder = 6
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            string inputs:space = "model"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-708.75, 44.621094)
+            int ui:nodegraph:node:stackingOrder = 156
+        }
+
+        def Shader "Separate3"
+        {
+            uniform token info:id = "ND_separate3_vector3"
+            float3 inputs:in.connect = </Root/Target/GeometricProperty.outputs:out>
+            float outputs:outx
+            float outputs:outy
+            float outputs:outz
+            float2 ui:nodegraph:node:pos = (-554.75, 42.941406)
+            int ui:nodegraph:node:stackingOrder = 95
+        }
+
+        def Shader "Abs"
+        {
+            uniform token info:id = "ND_absval_float"
+            float inputs:in.connect = </Root/Target/Separate3.outputs:outx>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-424.1797, -5.5859375)
+            int ui:nodegraph:node:stackingOrder = 135
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:out"]
+        }
+
+        def Shader "IfGreater"
+        {
+            uniform token info:id = "ND_ifgreater_color3"
+            color3f inputs:in1 = (1, 1, 1) (
+                colorSpace = "lin_srgb"
+            )
+            color3f inputs:in1.connect = </Root/Target/IfGreater_2.outputs:out>
+            color3f inputs:in2 = (0.90588236, 0.5019608, 0.54509807) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:value1.connect = </Root/Target/SquareRoot.outputs:out>
+            float inputs:value2 = 0.2
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-234.94531, 138.91016)
+            int ui:nodegraph:node:stackingOrder = 173
+        }
+
+        def Shader "IfGreater_1"
+        {
+            uniform token info:id = "ND_ifgreater_color3"
+            color3f inputs:in1 = (1, 1, 1) (
+                colorSpace = "lin_srgb"
+            )
+            color3f inputs:in1.connect = </Root/Target/IfGreater.outputs:out>
+            color3f inputs:in2 = (0.99942404, 0.9897192, 0.3001439) (
+                colorSpace = "srgb_texture"
+            )
+            float inputs:value1.connect = </Root/Target/SquareRoot.outputs:out>
+            float inputs:value2 = 0.1
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-131.22266, -35.28125)
+            int ui:nodegraph:node:stackingOrder = 174
+        }
+
+        def Shader "IfGreater_2"
+        {
+            uniform token info:id = "ND_ifgreater_color3"
+            color3f inputs:in1 = (1, 1, 1) (
+                colorSpace = "lin_srgb"
+            )
+            color3f inputs:in1.connect = </Root/Target/IfGreater_3.outputs:out>
+            color3f inputs:in2 = (0.3764706, 0.627451, 0.92156863) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:value1.connect = </Root/Target/SquareRoot.outputs:out>
+            float inputs:value2 = 0.3
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (-75.65234, 248.39062)
+            int ui:nodegraph:node:stackingOrder = 167
+        }
+
+        def Shader "IfGreater_3"
+        {
+            uniform token info:id = "ND_ifgreater_color3"
+            color3f inputs:in1 = (1, 1, 1) (
+                colorSpace = "lin_srgb"
+            )
+            color3f inputs:in2 = (0, 0, 0) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:value1.connect = </Root/Target/SquareRoot.outputs:out>
+            float inputs:value2 = 0.4
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (88.453125, 255.3086)
+            int ui:nodegraph:node:stackingOrder = 169
+        }
+
+        def Shader "MTLPowr"
+        {
+            uniform token info:id = "ND_MTL_powr_float"
+            float inputs:x.connect = </Root/Target/Abs.outputs:out>
+            float inputs:y = 2
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-612.21484, 229.4414)
+            int ui:nodegraph:node:stackingOrder = 149
+        }
+
+        def Shader "Abs_1"
+        {
+            uniform token info:id = "ND_absval_float"
+            float inputs:in.connect = </Root/Target/Separate3.outputs:outz>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-501.03516, 118.58594)
+            int ui:nodegraph:node:stackingOrder = 138
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:out"]
+        }
+
+        def Shader "MTLPowr_1"
+        {
+            uniform token info:id = "ND_MTL_powr_float"
+            float inputs:x.connect = </Root/Target/Abs_1.outputs:out>
+            float inputs:y = 2
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-607.85547, 378.82422)
+            int ui:nodegraph:node:stackingOrder = 151
+        }
+
+        def Shader "SquareRoot"
+        {
+            uniform token info:id = "ND_sqrt_float"
+            float inputs:in.connect = </Root/Target/Add.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-413.39844, 327.26953)
+            int ui:nodegraph:node:stackingOrder = 152
+        }
+
+        def Shader "Add"
+        {
+            uniform token info:id = "ND_add_float"
+            float inputs:in1.connect = </Root/Target/MTLPowr.outputs:out>
+            float inputs:in2.connect = </Root/Target/MTLPowr_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-436.90625, 260.17188)
+            int ui:nodegraph:node:stackingOrder = 153
+        }
+
+        def Shader "GeometricProperty"
+        {
+            uniform token info:id = "ND_geompropvalue_vector3"
+            string inputs:geomprop = "Pobject"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-730.8906, -56.414062)
+            int ui:nodegraph:node:stackingOrder = 159
+        }
+
+        def Shader "Position_1"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float2 ui:nodegraph:node:pos = (-885.95703, 129.67188)
+            int ui:nodegraph:node:stackingOrder = 162
+        }
+    }
+}
+

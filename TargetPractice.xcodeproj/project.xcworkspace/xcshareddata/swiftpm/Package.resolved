@@ -1,0 +1,15 @@
+{
+  "originHash" : "0190bc44a401193f82999366b175cad85cd6d0a3a18dee23210152b7588953ee",
+  "pins" : [
+    {
+      "identity" : "arunderstanding",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnhaney/ARUnderstanding",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3ee56e24d4a0597aaaa3318c23fd19826de04bc1"
+      }
+    }
+  ],
+  "version" : 3
+}
