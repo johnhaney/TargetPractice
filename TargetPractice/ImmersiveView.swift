@@ -8,19 +8,15 @@
 import SwiftUI
 import RealityKit
 import RealityKitContent
-import ARUnderstanding
+import HandGesture
 import Spatial
 
 struct ImmersiveView: View {
-    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    @State var leftHand: Entity = Entity()
-    @State var leftFingerTip: Entity = Entity()
     @State var leftBall: ModelEntity?
-    
-    @State var rightHand: Entity = Entity()
-    @State var rightFingerTip: Entity = Entity()
     @State var rightBall: ModelEntity?
+    
+    @State var leftDown = false
+    @State var rightDown = false
     
     @State var collisionWatcher: EventSubscription?
     @State var total: Int = 0
@@ -35,8 +31,6 @@ struct ImmersiveView: View {
                 ball.physicsBody = .init(mode: .dynamic)
                 self.leftBall = ball
                 content.add(ball)
-                leftHand.addChild(leftFingerTip)
-                content.add(leftHand)
             }
             do {
                 let ball = ModelEntity(mesh: .generateSphere(radius: 0.05), materials: [SimpleMaterial(color: .cyan, isMetallic: true)])
@@ -44,8 +38,6 @@ struct ImmersiveView: View {
                 ball.physicsBody = .init(mode: .dynamic)
                 self.rightBall = ball
                 content.add(ball)
-                rightHand.addChild(rightFingerTip)
-                content.add(rightHand)
             }
             let material: RealityKit.Material
             if let target = try? await ShaderGraphMaterial(named: "/Root/Target", from: "Immersive", in: realityKitContentBundle) {
@@ -96,58 +88,52 @@ struct ImmersiveView: View {
             Poofable.registerComponent()
             Poof.registerSystem()
         }
-        .onReceive(timer) { _ in
-            if let ball = leftBall?.clone(recursive: true),
-               let parent = leftBall?.parent
-            {
-                ball.components.set(Poofable())
-                parent.addChild(ball)
-                ball.transform = leftFingerTip.convert(transform: .init(rotation: .init(angle: -.pi/2, axis: SIMD3<Float>(x: 0, y: 0, z: 1))), to: nil)
-                let direction = leftFingerTip.convert(direction: [1,0,0], to: nil)
-                let action = ImpulseAction(linearImpulse: direction * 10)
-                let duration = 1 / 60.0
-                guard let animation = try? AnimationResource.makeActionAnimation(for: action, duration: duration, delay: 0)
-                else { return }
-                ball.playAnimation(animation)
-            }
-            if let ball = rightBall?.clone(recursive: true),
-               let parent = rightBall?.parent {
-                ball.components.set(Poofable())
-                parent.addChild(ball)
-                ball.transform = rightFingerTip.convert(transform: .init(rotation: .init(angle: -.pi/2, axis: SIMD3<Float>(x: 0, y: 0, z: 1))), to: nil)
-                let direction = rightFingerTip.convert(direction: [-1,0,0], to: nil)
-                let action = ImpulseAction(linearImpulse: direction * 10)
-                let duration = 1 / 60.0
-                guard let animation = try? AnimationResource.makeActionAnimation(for: action, duration: duration, delay: 0)
-                else { return }
-                ball.playAnimation(animation)
-            }
-        }
-        .task {
-            for await handUpdate in ARUnderstanding.handUpdates {
-                let ball: ModelEntity?
-                let hand: Entity
-                let fingerTip: Entity
-                let direction: Float
-                switch handUpdate.anchor.chirality {
-                case .right:
-                    direction = 1
-                    ball = rightBall
-                    hand = rightHand
-                    fingerTip = rightFingerTip
-                case .left:
-                    direction = -1
-                    ball = leftBall
-                    hand = leftHand
-                    fingerTip = leftFingerTip
+        .handGesture(
+            FingerGunGesture(hand: .left)
+                .onChanged { value in
+                    if value.thumbDown {
+                        if !leftDown,
+                           let ball = leftBall?.clone(recursive: true),
+                           let parent = leftBall?.parent {
+                            leftDown = true
+                            ball.components.set(Poofable())
+                            parent.addChild(ball)
+                            ball.transform = value.vector
+                            let direction = ball.convert(direction: [0,0,1], to: nil)
+                            let action = ImpulseAction(linearImpulse: direction * 10)
+                            let duration = 1 / 60.0
+                            guard let animation = try? AnimationResource.makeActionAnimation(for: action, duration: duration, delay: 0)
+                            else { return }
+                            ball.playAnimation(animation)
+                        }
+                    } else {
+                        leftDown = false
+                    }
                 }
-                let fingerJoint = handUpdate.anchor.joint(named: .indexFingerTip)
-                let fingerKnuckle = handUpdate.anchor.joint(named: .indexFingerTip)
-                let vector = Transform(matrix: fingerJoint.anchorFromJointTransform).translation - Transform(matrix: fingerKnuckle.anchorFromJointTransform).translation
-                hand.transform = Transform(matrix: handUpdate.anchor.originFromAnchorTransform)
-                fingerTip.transform = Transform(matrix: fingerJoint.anchorFromJointTransform)
-            }
-        }
+        )
+        .handGesture(
+            FingerGunGesture(hand: .right)
+                .onChanged { value in
+                    if value.thumbDown {
+                        if !rightDown,
+                           let ball = rightBall?.clone(recursive: true),
+                           let parent = rightBall?.parent {
+                            rightDown = true
+                            ball.components.set(Poofable())
+                            parent.addChild(ball)
+                            ball.transform = value.vector
+                            let direction = ball.convert(direction: [0,0,1], to: nil)
+                            let action = ImpulseAction(linearImpulse: direction * 10)
+                            let duration = 1 / 60.0
+                            guard let animation = try? AnimationResource.makeActionAnimation(for: action, duration: duration, delay: 0)
+                            else { return }
+                            ball.playAnimation(animation)
+                        }
+                    } else {
+                        rightDown = false
+                    }
+                }
+        )
     }
     
     func scoreEntity() -> Entity {
@@ -181,23 +167,6 @@ struct ImmersiveView: View {
     }
 }
 
-import ARKit
-
-extension HandAnchorRepresentable {
-    func position(_ name: ARKit.HandSkeleton.JointName) -> SIMD3<Float>? {
-        guard let jointMatrix = handSkeleton?.joint(name).anchorFromJointTransform
-        else { return nil }
-        
-        let transform = Transform(matrix: matrix_multiply(originFromAnchorTransform, jointMatrix))
-        return transform.translation
-    }
-}
-
-#Preview(immersionStyle: .progressive) {
-    ImmersiveView()
-        .environment(AppModel())
-}
-
 extension Entity {
     func removeAllChildren() {
         let children = self.children
@@ -205,4 +174,9 @@ extension Entity {
             child.removeFromParent()
         }
     }
+}
+
+#Preview(immersionStyle: .progressive) {
+    ImmersiveView()
+        .environment(AppModel())
 }

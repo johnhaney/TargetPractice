@@ -1,5 +1,5 @@
 {
-  "originHash" : "0190bc44a401193f82999366b175cad85cd6d0a3a18dee23210152b7588953ee",
+  "originHash" : "6bcd8d31e0e0d4e8a754aca785828fdb6ed17f15cec2e0169cc1e49686edb842",
   "pins" : [
     {
       "identity" : "arunderstanding",
@@ -8,6 +8,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "3ee56e24d4a0597aaaa3318c23fd19826de04bc1"
+      }
+    },
+    {
+      "identity" : "handgesture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnhaney/HandGesture",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c17c98ad2b89372ee5269c2b88c63aec223d9a86"
       }
     }
   ],

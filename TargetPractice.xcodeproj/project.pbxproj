@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5919DA2B2CBDD5A6002A623D /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 5919DA2A2CBDD5A6002A623D /* RealityKitContent */; };
-		5919DA542CBDE157002A623D /* ARUnderstanding in Frameworks */ = {isa = PBXBuildFile; productRef = 5919DA532CBDE157002A623D /* ARUnderstanding */; };
-		594600272CC4CE7600876A46 /* ARUnderstanding in Frameworks */ = {isa = PBXBuildFile; productRef = 594600262CC4CE7600876A46 /* ARUnderstanding */; };
+		59D23FA82D0582910073EFB4 /* HandGesture in Frameworks */ = {isa = PBXBuildFile; productRef = 59D23FA72D0582910073EFB4 /* HandGesture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,9 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5919DA542CBDE157002A623D /* ARUnderstanding in Frameworks */,
-				594600272CC4CE7600876A46 /* ARUnderstanding in Frameworks */,
 				5919DA2B2CBDD5A6002A623D /* RealityKitContent in Frameworks */,
+				59D23FA82D0582910073EFB4 /* HandGesture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +121,8 @@
 			name = TargetPractice;
 			packageProductDependencies = (
 				5919DA2A2CBDD5A6002A623D /* RealityKitContent */,
-				5919DA532CBDE157002A623D /* ARUnderstanding */,
-				594600262CC4CE7600876A46 /* ARUnderstanding */,
+				5969567A2D04A808006005B9 /* HandGesture */,
+				59D23FA72D0582910073EFB4 /* HandGesture */,
 			);
 			productName = TargetPractice;
 			productReference = 5919DA252CBDD5A6002A623D /* TargetPractice.app */;
@@ -182,7 +180,7 @@
 			mainGroup = 5919DA1C2CBDD5A6002A623D;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				594600252CC4CE7600876A46 /* XCRemoteSwiftPackageReference "ARUnderstanding" */,
+				59D23FA62D0582910073EFB4 /* XCRemoteSwiftPackageReference "HandGesture" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5919DA262CBDD5A6002A623D /* Products */;
@@ -484,9 +482,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		594600252CC4CE7600876A46 /* XCRemoteSwiftPackageReference "ARUnderstanding" */ = {
+		59D23FA62D0582910073EFB4 /* XCRemoteSwiftPackageReference "HandGesture" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/johnhaney/ARUnderstanding";
+			repositoryURL = "https://github.com/johnhaney/HandGesture";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -499,14 +497,14 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RealityKitContent;
 		};
-		5919DA532CBDE157002A623D /* ARUnderstanding */ = {
+		5969567A2D04A808006005B9 /* HandGesture */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = ARUnderstanding;
+			productName = HandGesture;
 		};
-		594600262CC4CE7600876A46 /* ARUnderstanding */ = {
+		59D23FA72D0582910073EFB4 /* HandGesture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 594600252CC4CE7600876A46 /* XCRemoteSwiftPackageReference "ARUnderstanding" */;
-			productName = ARUnderstanding;
+			package = 59D23FA62D0582910073EFB4 /* XCRemoteSwiftPackageReference "HandGesture" */;
+			productName = HandGesture;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
